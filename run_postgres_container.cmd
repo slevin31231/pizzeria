@@ -1,0 +1,1 @@
+docker run --rm --name postgres_db -e POSTGRES_DB=pizzeria_db -e POSTGRES_USER=pizzeria_user -e POSTGRES_PASSWORD=pizzeria_password -p 5000:5432 -d postgres:16

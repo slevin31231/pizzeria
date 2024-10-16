@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Деталі замовлення</title>
+    <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
+</head>
+<body>
+<img th:src="@{/images/OKPizza.png}" alt="OKPizza">
+<h1>Деталі замовлення</h1>
+<div th:object="${order}">
+    <p><b>Дата: </b><span th:text="${#temporals.format(order.dateTime, 'dd-MM-yyyy')}">Дата та час</span></p>
+    <p><b>Час замовлення: </b><span th:text="${#temporals.format(order.dateTime, 'HH:mm:ss')}">Дата та час</span></p>
+    <p><b>Ім'я замовника: </b><span th:text="*{customerName}">Ім'я</span></p>
+    <p><b>Номер телефону: </b><span th:text="*{customerPhoneNumber}">Номер телефону</span></p>
+    <p><b>Адреса доставки: </b><span th:text="*{deliveryAddress}">Адреса доставки</span></p>
+    <p><b>Час доставки замовлення: </b><span th:text="${#temporals.format(order.deliveryTime, 'HH:mm:ss')}">Дата та час</span></p>
+</div>
+<table>
+    <tr>
+        <th>№</th>
+        <th>№ піци</th>
+        <th>Склад</th>
+        <th>Розмір</th>
+        <th>Вага, гр</th>
+        <th>Ціна, грн</th>
+    </tr>
+    <tr th:each="pizza, iterStat : ${order.pizzaList}">
+        <td th:text="${iterStat.index + 1}"/>
+        <td th:text="${pizza.id}"/>
+        <td>
+            <span th:each="ingredient, iterStat : ${pizza.ingredients}"
+                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |"/>
+        </td>
+        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'"/>
+        <td th:text="${pizza.isBig} ? ${pizza.weightForBig} : ${pizza.weightForSmall}"/>
+        <td th:text="${pizza.isBig} ? ${pizza.priceForBig} : ${pizza.priceForSmall}"/>
+    </tr>
+    <tr>
+        <td colspan="5">Всього:</td>
+        <td th:text="${order.price}"/>
+    </tr>
+</table>
+<p>
+    <a th:href="@{/}">На головну сторінку</a>
+</p>
+</body>
+</html>

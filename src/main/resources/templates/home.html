@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Домашня сторінка</title>
+    <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
+</head>
+<body>
+<img th:src="@{/images/OKPizza.png}" alt="OKPizza">
+<h1>Меню</h1>
+<table>
+    <tr>
+        <th rowspan="2">№ піци</th>
+        <th rowspan="2">Склад</th>
+        <th colspan="2">Мала</th>
+        <th colspan="2">Велика</th>
+    </tr>
+    <tr>
+        <th>Ціна, грн</th>
+        <th>Вага, гр</th>
+        <th>Ціна, грн</th>
+        <th>Вага, гр</th>
+    </tr>
+    <tr th:each="pizza : ${pizza_set}">
+        <td th:text="${pizza.id}"/>
+        <td>
+            <span th:each="ingredient, iterStat : ${pizza.ingredients}"
+                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |"/>
+        </td>
+        <td th:text="${pizza.priceForSmall}"/>
+        <td th:text="${pizza.weightForSmall}"/>
+        <td th:text="${pizza.priceForBig}"/>
+        <td th:text="${pizza.weightForBig}"/>
+    </tr>
+</table>
+<br>
+<form th:method="POST" th:action="@{/select_pizza}">
+    <div>
+        <label for="pizza">Виберіть піцу </label>
+        <select id="pizza" name="pizza_id">
+            <option th:each="pizza : ${pizza_set}" th:value="*{pizza.id}" th:text="${pizza.id}"/>
+        </select><br>
+    </div>
+    <div>
+        <br>
+        <input type="radio" th:name="big" th:value="false" checked/> Мала
+        <input type="radio" th:name="big" th:value="true"/> Велика
+        <br>
+    </div>
+    <br>
+    <button type="submit">Вибрати</button>
+</form>
+<h1>Створити власну піцу</h1>
+<form th:method="POST" th:object="${pizza}" th:action="@{/create_pizza}">
+    <div class="checkbox-grid">
+        <div>
+            <h2>M'ясо</h2>
+            <div th:each="ingredient : ${meat}">
+                <input th:field="*{ingredients}" type="checkbox" th:value="${ingredient.id}"/>
+                <span th:text="${ingredient.name}">Інгредієнт</span>
+            </div>
+        </div>
+        <div>
+            <h2>Сири</h2>
+            <div th:each="ingredient : ${cheese}">
+                <input th:field="*{ingredients}" type="checkbox" th:value="${ingredient.id}"/>
+                <span th:text="${ingredient.name}">Інгредієнт</span>
+            </div>
+        </div>
+        <div>
+            <h2>Овочі</h2>
+            <div th:each="ingredient : ${vegetable}">
+                <input th:field="*{ingredients}" type="checkbox" th:value="${ingredient.id}"/>
+                <span th:text="${ingredient.name}">Інгредієнт</span>
+            </div>
+        </div>
+        <div>
+            <h2>Морепродукти</h2>
+            <div th:each="ingredient : ${seafood}">
+                <input th:field="*{ingredients}" type="checkbox" th:value="${ingredient.id}"/>
+                <span th:text="${ingredient.name}">Інгредієнт</span>
+            </div>
+        </div>
+    </div>
+    <div>
+        <br>
+        <input type="radio" th:field="*{big}" th:value="false"/> Мала
+        <input type="radio" th:field="*{big}" th:value="true"/> Велика
+        <br>
+    </div>
+    <br>
+    <button type="submit">Створити</button>
+</form>
+<div th:insert="~{footer::copy}">Дата</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+services:
+  app:
+    image: pizzeria
+    container_name: pizzeria_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5000/pizzeria_db
+      - SPRING_DATASOURCE_USERNAME=pizzeria_user
+      - SPRING_DATASOURCE_PASSWORD=pizzeria_password
+
+  db:
+    image: postgres
+    container_name: postgres_db
+    ports:
+      - "5000:5432"
+    environment:
+      - POSTGRES_DB=pizzeria_db
+      - POSTGRES_USER=pizzeria_user
+      - POSTGRES_PASSWORD=pizzeria_password

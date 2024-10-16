@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Замовлення</title>
+    <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
+</head>
+<body>
+<img th:src="@{/images/OKPizza.png}" alt="OKPizza">
+<h1>Замовлення</h1>
+<table>
+    <tr>
+        <th>№</th>
+        <th>№ піци</th>
+        <th>Склад</th>
+        <th>Розмір</th>
+        <th>Вага, гр</th>
+        <th>Ціна, грн</th>
+    </tr>
+    <tr th:each="pizza, iterStat : ${order.pizzaList}">
+        <td th:text="${iterStat.index + 1}"/>
+        <td th:text="${pizza.id}"/>
+        <td>
+            <span th:each="ingredient, iterStat : ${pizza.ingredients}"
+                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |"/>
+        </td>
+        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'"/>
+        <td th:text="${pizza.isBig} ? ${pizza.weightForBig} : ${pizza.weightForSmall}"/>
+        <td th:text="${pizza.isBig} ? ${pizza.priceForBig} : ${pizza.priceForSmall}"/>
+    </tr>
+    <tr>
+        <td colspan="5">Всього:</td>
+        <td th:text="${order.calculateValue()}"/>
+    </tr>
+</table>
+<br>
+<form th:method="DELETE" th:action="@{/order/delete}">
+    <label for="pizza">Видалити піцу із замовлення </label>
+    <select id="pizza" name="index">
+        <option th:each="pizza, iterStat : ${order.pizzaList}"
+                th:value="${iterStat.index}"
+                th:text="${iterStat.index + 1}"/>
+    </select>
+    <input type="submit" value="Видалити піцу"/>
+</form>
+<p>
+    <a th:href="@{/}">Додати ще одну піцу</a>
+</p>
+<form th:method="POST" th:object="${order}">
+    <h2>Інформація:</h2>
+    <label for="customerName">Ім'я: </label>
+    <input id="customerName" type="text" placeholder="Ваше ім'я" th:field="*{customerName}"><br>
+    <br>
+    <label for="customerPhoneNumber">Номер телефону: </label>
+    <input id="customerPhoneNumber" type="text" placeholder="+380(12)-345-67-89" th:field="*{customerPhoneNumber}"><br>
+    <br>
+    <label for="deliveryAddress">Адрес доставки: </label>
+    <input id="deliveryAddress" type="text" placeholder="Вулиця, 123" th:field="*{deliveryAddress}"><br>
+    <h2>Оплата:</h2>
+    <label for="ccNumber">Номер картки: </label>
+    <input id="ccNumber" type="text" placeholder="1234 5678 9123 4567" th:field="*{ccNumber}"><br>
+    <br>
+    <label for="ccExpiration">Термін дії картки: </label>
+    <input id="ccExpiration" type="text" placeholder="12/34" th:field="*{ccExpiration}"><br>
+    <br>
+    <label for="ccVV">CVV код: </label>
+    <input id="ccVV" type="text" placeholder="123" th:field="*{ccVV}"><br>
+    <br>
+    <button type="submit">Замовити</button>
+</form>
+</body>
+</html>
