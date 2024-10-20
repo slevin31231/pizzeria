@@ -22,24 +22,25 @@
         <th>Вага, гр</th>
     </tr>
     <tr th:each="pizza : ${pizza_set}">
-        <td th:text="${pizza.id}"/>
+        <td th:text="${pizza.id}">№ піци</td>
         <td>
             <span th:each="ingredient, iterStat : ${pizza.ingredients}"
-                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |"/>
+                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |">Склад</span>
         </td>
-        <td th:text="${pizza.priceForSmall}"/>
-        <td th:text="${pizza.weightForSmall}"/>
-        <td th:text="${pizza.priceForBig}"/>
-        <td th:text="${pizza.weightForBig}"/>
+        <td th:text="${pizza.priceForSmall}">Ціна, велика</td>
+        <td th:text="${pizza.weightForSmall}">Ціна, мала</td>
+        <td th:text="${pizza.priceForBig}">Вага, велика</td>
+        <td th:text="${pizza.weightForBig}">Вага, мала</td>
     </tr>
 </table>
-<br>
 <form th:method="POST" th:action="@{/select_pizza}">
     <div>
+        <br>
         <label for="pizza">Виберіть піцу </label>
         <select id="pizza" name="pizza_id">
-            <option th:each="pizza : ${pizza_set}" th:value="*{pizza.id}" th:text="${pizza.id}"/>
-        </select><br>
+            <option th:each="pizza : ${pizza_set}" th:value="*{pizza.id}" th:text="${pizza.id}">Id</option>
+        </select>
+        <br>
     </div>
     <div>
         <br>
@@ -50,8 +51,9 @@
     <br>
     <button type="submit">Вибрати</button>
 </form>
-<h1>Створити власну піцу</h1>
 <form th:method="POST" th:object="${pizza}" th:action="@{/create_pizza}">
+    <h1>Створити власну піцу</h1>
+    <div style="color:red" th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}">Помилка</div>
     <div class="checkbox-grid">
         <div>
             <h2>M'ясо</h2>
@@ -91,6 +93,5 @@
     <br>
     <button type="submit">Створити</button>
 </form>
-<div th:insert="~{footer::copy}">Дата</div>
 </body>
 </html>

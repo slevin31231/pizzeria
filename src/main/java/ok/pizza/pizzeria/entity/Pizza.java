@@ -1,6 +1,9 @@
 package ok.pizza.pizzeria.entity;
 
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Random;
 import java.util.Set;
@@ -10,21 +13,20 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class Pizza implements Cloneable{
+public class Pizza implements Cloneable {
 
-//	private static final int MAX_INGREDIENT_SIZE = 5;
-
-	//	@Id
+//	@Id
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	//	@OneToMany
+//	@OneToMany
+	@Size(min = 1, max = 7, message = "Кількість інгредієнтів повинна бути від 1 до 7")
 	private Set<Ingredient> ingredients;
 
 	private boolean big;
 
 	private int priceForSmall;
 	private int priceForBig;
+
 	private int weightForSmall;
 	private int weightForBig;
 
@@ -73,18 +75,5 @@ public class Pizza implements Cloneable{
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
-
-//	public void addIngredient(Ingredient ingredient) {
-//		int ingredientsSize = ingredients.size();
-//		if (ingredientsSize > MAX_INGREDIENT_SIZE) {
-//			int x = ingredientsSize - MAX_INGREDIENT_SIZE;
-//			for (int i = 0; i < x + 1; i++) {
-//				ingredients.removeFirst();
-//			}
-//			ingredients.add(ingredient);
-//		} else {
-//			ingredients.add(ingredient);
-//		}
-//	}
 }
 

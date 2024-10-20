@@ -26,19 +26,19 @@
         <th>Ціна, грн</th>
     </tr>
     <tr th:each="pizza, iterStat : ${order.pizzaList}">
-        <td th:text="${iterStat.index + 1}"/>
-        <td th:text="${pizza.id}"/>
+        <td th:text="${iterStat.index + 1}">№</td>
+        <td th:text="${pizza.id}">№ піци</td>
         <td>
             <span th:each="ingredient, iterStat : ${pizza.ingredients}"
-                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |"/>
+                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |">Склад</span>
         </td>
-        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'"/>
-        <td th:text="${pizza.isBig} ? ${pizza.weightForBig} : ${pizza.weightForSmall}"/>
-        <td th:text="${pizza.isBig} ? ${pizza.priceForBig} : ${pizza.priceForSmall}"/>
+        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
+        <td th:text="${pizza.isBig} ? ${pizza.weightForBig} : ${pizza.weightForSmall}">Вага</td>
+        <td th:text="${pizza.isBig} ? ${pizza.priceForBig} : ${pizza.priceForSmall}">Ціна</td>
     </tr>
     <tr>
         <td colspan="5">Всього:</td>
-        <td th:text="${order.price}"/>
+        <td th:text="${order.price}"/>Ціна</td>
     </tr>
 </table>
 <p>
