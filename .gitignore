@@ -1,7 +1,7 @@
 HELP.md
-target/
 docker-compose.yml
 Dockerfile
+target/
 #run_postgres_container.cmd
 #/src/main/resources/application-dev.yml
 

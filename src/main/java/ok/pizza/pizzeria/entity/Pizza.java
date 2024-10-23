@@ -1,34 +1,48 @@
 package ok.pizza.pizzeria.entity;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-//@Entity
-//@Table(name = "pizza")
-
+@Entity
+@Table(name = "pizza")
 @Data
 @NoArgsConstructor
 public class Pizza implements Cloneable {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-//	@OneToMany
+
+	@ManyToMany
+	@JoinTable(	name = "pizza_ingredient",
+				joinColumns = @JoinColumn(name = "pizza_id"),
+				inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
 	@Size(min = 1, max = 7, message = "Кількість інгредієнтів повинна бути від 1 до 7")
 	private Set<Ingredient> ingredients;
 
+	@Transient
 	private boolean big;
 
+	@Column(name = "price_for_small")
 	private int priceForSmall;
+
+	@Column(name = "price_for_big")
 	private int priceForBig;
 
+	@Column(name = "weight_for_small")
 	private int weightForSmall;
+
+	@Column(name = "weight_for_big")
 	private int weightForBig;
+
+	@ManyToMany(mappedBy = "pizzaList")
+	private List<Order> orders;
 
 	public Pizza(int id, Set<Ingredient> ingredients, int priceForSmall, int priceForBig, int weightForSmall, int weightForBig) {
 		this.id = id;

@@ -1,4 +1,4 @@
-INSERT INTO ingredients (ingredient, ingredient_type) VALUES
+INSERT INTO ingredient (ingredient_name, ingredient_type) VALUES
 ('Шинка', 'MEAT'),
 ('Гриби', 'VEGETABLE'),
 ('Цибуля', 'VEGETABLE'),
