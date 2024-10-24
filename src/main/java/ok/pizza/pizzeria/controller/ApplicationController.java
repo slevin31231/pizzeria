@@ -4,9 +4,10 @@ import jakarta.validation.Valid;
 import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.entity.Order;
 import ok.pizza.pizzeria.entity.Pizza;
+import ok.pizza.pizzeria.entity.PizzaRef;
 import ok.pizza.pizzeria.service.IngredientService;
 import ok.pizza.pizzeria.service.OrderService;
-import ok.pizza.pizzeria.service.PizzaService;
+import ok.pizza.pizzeria.service.PizzaRefService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,20 +16,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @SessionAttributes("order")
 public class ApplicationController {
 
 	private final IngredientService ingredientService;
-	private final PizzaService pizzaService;
+	private final PizzaRefService pizzaRefService;
 	private final OrderService orderService;
 
 	@Autowired
-	public ApplicationController(IngredientService ingredientService, PizzaService pizzaService, OrderService orderService) {
+	public ApplicationController(IngredientService ingredientService, PizzaRefService pizzaRefService, OrderService orderService) {
 		this.ingredientService = ingredientService;
-		this.pizzaService = pizzaService;
+		this.pizzaRefService = pizzaRefService;
 		this.orderService = orderService;
 	}
 
@@ -37,19 +37,23 @@ public class ApplicationController {
 		return "home";
 	}
 
-	@PostMapping("/select_pizza")
-	public String selectPizza(@RequestParam("pizza_id") int pizzaId, @RequestParam("big") boolean big, @ModelAttribute Order order) {
-		Pizza pizza = pizzaService.findByIdAndCopy(pizzaId, big);
+	@PostMapping("/select_pizza_ref")
+	public String selectPizza(@RequestParam("pizza_ref_id") int pizzaRefId,
+							  @RequestParam("big") boolean big,
+							  @ModelAttribute Order order) {
+		Pizza pizza = pizzaRefService.findByIdAndCopy(pizzaRefId, big);
 		order.addPizza(pizza);
 		return "redirect:/order";
 	}
 
-
-	@PostMapping("/create_pizza")
-	public String createPizza(@Valid Pizza newPizza, BindingResult bindingResult, @ModelAttribute Order order) {
+	@PostMapping("/create_pizza_ref")
+	public String createPizza(@Valid PizzaRef newPizzaRef,
+							  BindingResult bindingResult,
+							  @RequestParam("big") boolean big,
+							  @ModelAttribute Order order) {
 		if (bindingResult.hasErrors())
 			return "home";
-		Pizza pizza = pizzaService.getOrCreateAndCopy(newPizza);
+		Pizza pizza = pizzaRefService.getOrCreateAndCopy(newPizzaRef, big);
 		order.addPizza(pizza);
 		return "redirect:/order";
 	}
@@ -59,10 +63,10 @@ public class ApplicationController {
 		return "order";
 	}
 
-	@DeleteMapping("/order/delete")
+	@DeleteMapping("/order/delete_pizza")
 	public String deletePizzaFromOrder(@RequestParam int index,
 									   @ModelAttribute Order order) {
-		order.getPizzaList().remove(index);
+		order.deletePizza(index);
 		return "redirect:/order";
 	}
 
@@ -71,23 +75,20 @@ public class ApplicationController {
 						   BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
 			return "order";
-		orderService.addOrder(order);
-		System.out.println("Order: " + order + " is added to DB");
+		orderService.saveOrder(order);
 		return "redirect:/details";
 	}
 
 	@GetMapping("/details")
 	public String showOrderDetailsPage(@ModelAttribute Order order,
 									   SessionStatus sessionStatus) {
-		System.out.println(order.getDateTime());
-		System.out.println(order.getDeliveryTime());
 		sessionStatus.setComplete();
 		return "details";
 	}
 
 	@ModelAttribute
 	public void addIngredientsToModel(Model model) {
-		List<Ingredient> ingredients = ingredientService.findAll();
+		List<Ingredient> ingredients = ingredientService.getAllIngredients();
 		model.addAttribute("ingredients", ingredients);
 
 		Ingredient.Type[] types = Ingredient.Type.values();
@@ -99,14 +100,14 @@ public class ApplicationController {
 		}
 	}
 
-	@ModelAttribute("pizza_set")
-	public Set<Pizza> pizzaSet() {
-		return pizzaService.getPizzaSet();
+	@ModelAttribute("pizza_ref_list")
+	public List<PizzaRef> pizzaRefList() {
+		return pizzaRefService.getPizzaRefList();
 	}
 
-	@ModelAttribute("pizza")
-	public Pizza pizza() {
-		return new Pizza();
+	@ModelAttribute("pizza_ref")
+	public PizzaRef pizzaRef() {
+		return new PizzaRef();
 	}
 
 	@ModelAttribute("order")

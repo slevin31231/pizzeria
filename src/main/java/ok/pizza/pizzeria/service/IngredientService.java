@@ -10,14 +10,14 @@ import java.util.List;
 @Service
 public class IngredientService {
 
-	private IngredientRepository ingredientRepository;
+	private final IngredientRepository ingredientRepository;
 
 	@Autowired
 	public IngredientService(IngredientRepository ingredientRepository) {
 		this.ingredientRepository = ingredientRepository;
 	}
 
-	public List<Ingredient> findAll() {
+	public List<Ingredient> getAllIngredients() {
 		return ingredientRepository.findAll();
 	}
 }

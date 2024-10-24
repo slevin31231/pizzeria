@@ -1,6 +1,5 @@
-package ok.pizza.pizzeria;
+package ok.pizza.pizzeria.controller;
 
-import ok.pizza.pizzeria.controller.ApplicationController;
 import ok.pizza.pizzeria.service.IngredientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(ApplicationController.class)
-public class HomeControllerTest {
+public class ApplicationControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;

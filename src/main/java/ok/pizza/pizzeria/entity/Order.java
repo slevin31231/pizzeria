@@ -3,6 +3,8 @@ package ok.pizza.pizzeria.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import java.time.LocalDateTime;
@@ -12,9 +14,12 @@ import java.util.List;
 @Entity
 @Table(name = "customer_order")
 @Data
+@ToString(exclude = "pizzaList")
+@NoArgsConstructor
 public class Order {
 
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
@@ -53,31 +58,28 @@ public class Order {
 	@Column(name = "price")
 	private int price;
 
-	@ManyToMany
-	@JoinTable(	name = "order_pizza",
-				joinColumns = @JoinColumn(name = "order_id"),
-				inverseJoinColumns = @JoinColumn(name = "pizza_id"))
+	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
 	@Size(min = 1, max = 10, message = "Кількість піц повинна бути від 1 до 10")
 	private List<Pizza> pizzaList = new ArrayList<>();
 
-
 	public void addPizza(Pizza pizza) {
+		pizza.setOrder(this);
 		pizzaList.add(pizza);
+		this.calculateValue();
 	}
 
-	public int calculateValue() {
+	public void deletePizza(int index) {
+		Pizza deletedPizza = this.getPizzaList().get(index);
+		deletedPizza.setOrder(null);
+		deletedPizza.getPizzaRef().getPizzaList().remove(deletedPizza);
+		deletedPizza.setPizzaRef(null);
+		this.getPizzaList().remove(deletedPizza);
+		this.calculateValue();
+	}
+
+	private void calculateValue() {
 		price = 0;
-		for (Pizza pizza : pizzaList) {
-			if (pizza.isBig()) {
-				price += pizza.getPriceForBig();
-			} else {
-				price += pizza.getPriceForSmall();
-			}
-		}
-		return price;
-	}
-
-	public void deletePizzaFromOrder(int num) {
-		pizzaList.remove(num - 1);
+		for (Pizza pizza : pizzaList)
+			price += pizza.getPrice();
 	}
 }

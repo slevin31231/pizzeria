@@ -1,93 +1,36 @@
 package ok.pizza.pizzeria.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import lombok.ToString;
 
 @Entity
 @Table(name = "pizza")
 @Data
+@ToString(exclude = {"pizzaRef", "order"})
 @NoArgsConstructor
-public class Pizza implements Cloneable {
+public class Pizza {
 
 	@Id
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@ManyToMany
-	@JoinTable(	name = "pizza_ingredient",
-				joinColumns = @JoinColumn(name = "pizza_id"),
-				inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
-	@Size(min = 1, max = 7, message = "Кількість інгредієнтів повинна бути від 1 до 7")
-	private Set<Ingredient> ingredients;
+	@ManyToOne
+	@JoinColumn(name = "pizza_ref_id", referencedColumnName = "id")
+	private PizzaRef pizzaRef;
 
-	@Transient
+	@Column(name = "is_big")
 	private boolean big;
 
-	@Column(name = "price_for_small")
-	private int priceForSmall;
+	@Column(name = "weight")
+	private int weight;
 
-	@Column(name = "price_for_big")
-	private int priceForBig;
+	@Column(name = "price")
+	private int price;
 
-	@Column(name = "weight_for_small")
-	private int weightForSmall;
-
-	@Column(name = "weight_for_big")
-	private int weightForBig;
-
-	@ManyToMany(mappedBy = "pizzaList")
-	private List<Order> orders;
-
-	public Pizza(int id, Set<Ingredient> ingredients, int priceForSmall, int priceForBig, int weightForSmall, int weightForBig) {
-		this.id = id;
-		this.ingredients = ingredients;
-		this.priceForSmall = priceForSmall;
-		this.priceForBig = priceForBig;
-		this.weightForSmall = weightForSmall;
-		this.weightForBig = weightForBig;
-	}
-
-	public void setPriceAndWeight() {
-		int quantity = ingredients.size();
-		if (quantity == 1) {
-			this.priceForSmall = getNumberWithStep(100, 150, 10);
-			this.priceForBig = getNumberWithStep(130, 190, 10);
-			this.weightForSmall = getNumberWithStep(540, 640, 10);
-			this.weightForBig = getNumberWithStep(715, 865, 5);
-		} else if (quantity == 2 || quantity == 3) {
-			this.priceForSmall = getNumberWithStep(130, 170, 10);
-			this.priceForBig = getNumberWithStep(170, 210, 10);
-			this.weightForSmall = getNumberWithStep(640, 680, 10);
-			this.weightForBig = getNumberWithStep(845, 915, 5);
-		} else if (quantity == 4) {
-			this.priceForSmall = getNumberWithStep(140, 180, 10);
-			this.priceForBig = getNumberWithStep(180, 220, 10);
-			this.weightForSmall = getNumberWithStep(605, 700, 10);
-			this.weightForBig = getNumberWithStep(795, 935, 5);
-		} else {
-			this.priceForSmall = 180;
-			this.priceForBig = 220;
-			this.weightForSmall = 700;
-			this.weightForBig = 935;
-		}
-	}
-
-	private static int getNumberWithStep(int min, int max, int step) {
-		Random random = new Random();
-		int range = (max - min) / step;
-		int randomIndex = random.nextInt(range + 1);
-		return min + randomIndex * step;
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
+	@ManyToOne
+	@JoinColumn(name = "order_id", referencedColumnName = "id")
+	private Order order;
 }
-

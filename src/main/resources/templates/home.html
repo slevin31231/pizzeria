@@ -21,24 +21,24 @@
         <th>Ціна, грн</th>
         <th>Вага, гр</th>
     </tr>
-    <tr th:each="pizza : ${pizza_set}">
-        <td th:text="${pizza.id}">№ піци</td>
+    <tr th:each="pizza_ref : ${pizza_ref_list}">
+        <td th:text="${pizza_ref.id}">№ піци</td>
         <td>
-            <span th:each="ingredient, iterStat : ${pizza.ingredients}"
+            <span th:each="ingredient, iterStat : ${pizza_ref.ingredients}"
                   th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |">Склад</span>
         </td>
-        <td th:text="${pizza.priceForSmall}">Ціна, велика</td>
-        <td th:text="${pizza.weightForSmall}">Ціна, мала</td>
-        <td th:text="${pizza.priceForBig}">Вага, велика</td>
-        <td th:text="${pizza.weightForBig}">Вага, мала</td>
+        <td th:text="${pizza_ref.priceForSmall}">Ціна, велика</td>
+        <td th:text="${pizza_ref.weightForSmall}">Ціна, мала</td>
+        <td th:text="${pizza_ref.priceForBig}">Вага, велика</td>
+        <td th:text="${pizza_ref.weightForBig}">Вага, мала</td>
     </tr>
 </table>
-<form th:method="POST" th:action="@{/select_pizza}">
+<form th:method="POST" th:action="@{/select_pizza_ref}">
     <div>
         <br>
         <label for="pizza">Виберіть піцу </label>
-        <select id="pizza" name="pizza_id">
-            <option th:each="pizza : ${pizza_set}" th:value="*{pizza.id}" th:text="${pizza.id}">Id</option>
+        <select id="pizza" name="pizza_ref_id">
+            <option th:each="pizza_ref : ${pizza_ref_list}" th:value="*{pizza_ref.id}" th:text="${pizza_ref.id}">Id</option>
         </select>
         <br>
     </div>
@@ -51,7 +51,7 @@
     <br>
     <button type="submit">Вибрати</button>
 </form>
-<form th:method="POST" th:object="${pizza}" th:action="@{/create_pizza}">
+<form th:method="POST" th:object="${pizza_ref}" th:action="@{/create_pizza_ref}">
     <h1>Створити власну піцу</h1>
     <div style="color:red" th:if="${#fields.hasErrors('ingredients')}" th:errors="*{ingredients}">Помилка</div>
     <div class="checkbox-grid">
@@ -86,8 +86,8 @@
     </div>
     <div>
         <br>
-        <input type="radio" th:field="*{big}" th:value="false"/> Мала
-        <input type="radio" th:field="*{big}" th:value="true"/> Велика
+        <input type="radio" th:name="big" th:value="false" checked/> Мала
+        <input type="radio" th:name="big" th:value="true"/> Велика
         <br>
     </div>
     <br>

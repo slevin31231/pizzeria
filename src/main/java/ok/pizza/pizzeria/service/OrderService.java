@@ -1,21 +1,25 @@
 package ok.pizza.pizzeria.service;
 
 import ok.pizza.pizzeria.entity.Order;
+import ok.pizza.pizzeria.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class OrderService {
 
-	private List<Order> orders = new ArrayList<>();
+	private final OrderRepository orderRepository;
 
-	public Order addOrder(Order order) {
+	@Autowired
+	public OrderService(OrderRepository orderRepository) {
+		this.orderRepository = orderRepository;
+	}
+
+	public Order saveOrder(Order order) {
 		order.setDateTime(LocalDateTime.now());
 		order.setDeliveryTime(LocalDateTime.now().plusMinutes(40));
-		orders.add(order);
-		return order;
+		return orderRepository.save(order);
 	}
 }
