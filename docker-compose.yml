@@ -1,4 +1,13 @@
 services:
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    ports:
+      - "5000:5432"
+    environment:
+      - POSTGRES_DB=pizzeria_db
+      - POSTGRES_USER=pizzeria_user
+      - POSTGRES_PASSWORD=pizzeria_password
   app:
     image: pizzeria
     container_name: pizzeria_app
@@ -10,16 +19,6 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5000/pizzeria_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pizzeria_db
       - SPRING_DATASOURCE_USERNAME=pizzeria_user
       - SPRING_DATASOURCE_PASSWORD=pizzeria_password
-
-  db:
-    image: postgres
-    container_name: postgres_db
-    ports:
-      - "5000:5432"
-    environment:
-      - POSTGRES_DB=pizzeria_db
-      - POSTGRES_USER=pizzeria_user
-      - POSTGRES_PASSWORD=pizzeria_password

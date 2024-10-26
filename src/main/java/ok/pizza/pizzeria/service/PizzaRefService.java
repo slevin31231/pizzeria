@@ -29,8 +29,8 @@ public class PizzaRefService {
 	}
 
 	public Pizza getOrCreateAndCopy(PizzaRef newPizzaRef, boolean big) {
-		List<Ingredient> ingredients = newPizzaRef.getIngredients();
-		Set<Ingredient> newIngredientSet = new HashSet<>(ingredients);
+		List<Ingredient> newIngredients = newPizzaRef.getIngredients();
+		Set<Ingredient> newIngredientSet = new HashSet<>(newIngredients);
 
 		List<PizzaRef> pizzaRefList = pizzaRefRepository.findAll();
 		for (PizzaRef pizzaRef : pizzaRefList) {
@@ -39,7 +39,7 @@ public class PizzaRefService {
 				return pizzaRef.createPizza(big);
 			}
 		}
-		ingredients.forEach(ingredient -> ingredient.getPizzaRefList().add(newPizzaRef));
+		newIngredients.forEach(ingredient -> ingredient.getPizzaRefList().add(newPizzaRef));
 		newPizzaRef.setPriceAndWeight();
 		pizzaRefRepository.save(newPizzaRef);
 		return newPizzaRef.createPizza(big);

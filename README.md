@@ -1,1 +1,1 @@
-Run with: --spring.profiles.active=dev
+docker-compose up --build -d

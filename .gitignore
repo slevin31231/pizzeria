@@ -1,9 +1,7 @@
 HELP.md
-docker-compose.yml
-Dockerfile
 target/
-#run_postgres_container.cmd
-#/src/main/resources/application-dev.yml
+run_postgres_container.cmd
+src/main/resources/application-dev.yml
 
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

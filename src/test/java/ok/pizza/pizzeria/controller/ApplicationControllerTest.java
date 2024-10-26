@@ -1,6 +1,8 @@
 package ok.pizza.pizzeria.controller;
 
 import ok.pizza.pizzeria.service.IngredientService;
+import ok.pizza.pizzeria.service.OrderService;
+import ok.pizza.pizzeria.service.PizzaRefService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +19,12 @@ public class ApplicationControllerTest {
 
 	@MockBean
 	private IngredientService ingredientService;
+
+	@MockBean
+	private OrderService orderService;
+
+	@MockBean
+	private PizzaRefService pizzaRefService;
 
 	@Test
 	public void testHomePage() throws Exception {

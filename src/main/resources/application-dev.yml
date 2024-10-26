@@ -1,5 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5000/pizzeria_db
-    username: pizzeria_user
-    password: pizzeria_password

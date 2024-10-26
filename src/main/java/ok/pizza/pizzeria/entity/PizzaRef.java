@@ -25,7 +25,6 @@ public class PizzaRef {
 				joinColumns = @JoinColumn(name = "pizza_ref_id"),
 				inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
 	@Size(min = 1, max = 7, message = "Кількість інгредієнтів повинна бути від 1 до 7")
-//	private Set<Ingredient> ingredients;
 	private List<Ingredient> ingredients;
 
 	@Column(name = "price_for_small")
