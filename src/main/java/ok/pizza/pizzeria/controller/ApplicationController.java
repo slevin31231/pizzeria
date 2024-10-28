@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -50,9 +51,12 @@ public class ApplicationController {
 	public String createPizza(@Valid PizzaRef newPizzaRef,
 							  BindingResult bindingResult,
 							  @RequestParam("big") boolean big,
-							  @ModelAttribute Order order) {
-		if (bindingResult.hasErrors())
-			return "home";
+							  @ModelAttribute Order order,
+							  RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			redirectAttributes.addFlashAttribute("errors", bindingResult.getFieldErrors());
+			return "redirect:/";
+		}
 		Pizza pizza = pizzaRefService.getOrCreateAndCopy(newPizzaRef, big);
 		order.addPizza(pizza);
 		return "redirect:/order";
@@ -88,7 +92,7 @@ public class ApplicationController {
 
 	@ModelAttribute
 	public void addIngredientsToModel(Model model) {
-		List<Ingredient> ingredients = ingredientService.getAllIngredients();
+		List<Ingredient> ingredients = ingredientService.getIngredients();
 		model.addAttribute("ingredients", ingredients);
 
 		Ingredient.Type[] types = Ingredient.Type.values();

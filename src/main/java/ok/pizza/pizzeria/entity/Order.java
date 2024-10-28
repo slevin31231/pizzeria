@@ -1,7 +1,11 @@
 package ok.pizza.pizzeria.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -24,9 +28,11 @@ public class Order {
 	private int id;
 
 	@Column(name = "date_time")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
 	private LocalDateTime dateTime;
 
 	@Column(name = "delivery_time")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
 	private LocalDateTime deliveryTime;
 
 	@Column(name = "customer_name")
@@ -58,7 +64,7 @@ public class Order {
 	@Column(name = "price")
 	private int price;
 
-	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	@Size(min = 1, max = 10, message = "Кількість піц повинна бути від 1 до 10")
 	private List<Pizza> pizzaList = new ArrayList<>();
 
@@ -71,8 +77,6 @@ public class Order {
 	public void deletePizza(int index) {
 		Pizza deletedPizza = this.getPizzaList().get(index);
 		deletedPizza.setOrder(null);
-		deletedPizza.getPizzaRef().getPizzaList().remove(deletedPizza);
-		deletedPizza.setPizzaRef(null);
 		this.getPizzaList().remove(deletedPizza);
 		this.calculateValue();
 	}

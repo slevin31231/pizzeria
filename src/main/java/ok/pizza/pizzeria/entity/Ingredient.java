@@ -1,5 +1,6 @@
 package ok.pizza.pizzeria.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @ToString(exclude = "pizzaRefList")
 @RequiredArgsConstructor
 @NoArgsConstructor(force = true)
+@JsonIgnoreProperties("pizzaRefList")
 public class Ingredient {
 
 	@Id

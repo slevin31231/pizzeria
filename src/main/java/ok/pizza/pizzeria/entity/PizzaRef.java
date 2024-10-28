@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 @Entity
 @Table(name = "pizza_ref")
 @Data
-@ToString(exclude = {"pizzaList", "ingredients"})
+@ToString(exclude = "ingredients")
 @NoArgsConstructor
 public class PizzaRef {
 
@@ -38,9 +39,6 @@ public class PizzaRef {
 
 	@Column(name = "weight_for_big")
 	private int weightForBig;
-
-	@OneToMany(mappedBy = "pizzaRef", fetch = FetchType.EAGER)
-	private List<Pizza> pizzaList;
 
 	public void setPriceAndWeight() {
 		int quantity = ingredients.size();
@@ -76,7 +74,14 @@ public class PizzaRef {
 
 	public Pizza createPizza(boolean big) {
 		Pizza pizza = new Pizza();
-		pizza.setPizzaRef(this);
+		pizza.setPizzaRefId(this.getId());
+
+		List<String> ingredientsNames = this.getIngredients()
+											.stream()
+											.map(Ingredient::getName)
+											.toList();
+
+		pizza.setIngredientsNames(ingredientsNames);
 		pizza.setBig(big);
 		if (big) {
 			pizza.setWeight(weightForBig);
@@ -84,12 +89,6 @@ public class PizzaRef {
 		} else {
 			pizza.setWeight(weightForSmall);
 			pizza.setPrice(priceForSmall);
-		}
-		if (pizzaList == null) {
-			pizzaList = new ArrayList<>();
-			pizzaList.add(pizza);
-		} else {
-			pizzaList.add(pizza);
 		}
 		return pizza;
 	}

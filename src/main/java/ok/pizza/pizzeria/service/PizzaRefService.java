@@ -4,10 +4,15 @@ import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.entity.Pizza;
 import ok.pizza.pizzeria.entity.PizzaRef;
 import ok.pizza.pizzeria.repository.PizzaRefRepository;
+import ok.pizza.pizzeria.util.IngredientNotFoundException;
+import ok.pizza.pizzeria.util.PizzaRefNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PizzaRefService {
@@ -17,10 +22,6 @@ public class PizzaRefService {
 	@Autowired
 	public PizzaRefService(PizzaRefRepository pizzaRefRepository) {
 		this.pizzaRefRepository = pizzaRefRepository;
-	}
-
-	public List<PizzaRef> getPizzaRefList() {
-		return pizzaRefRepository.findAll();
 	}
 
 	public Pizza findByIdAndCopy(int pizzaId, boolean big) {
@@ -43,5 +44,24 @@ public class PizzaRefService {
 		newPizzaRef.setPriceAndWeight();
 		pizzaRefRepository.save(newPizzaRef);
 		return newPizzaRef.createPizza(big);
+	}
+
+	public List<PizzaRef> getPizzaRefList() {
+		return pizzaRefRepository.findAll();
+	}
+
+	public PizzaRef getPizzaRef(int id) {
+		Optional<PizzaRef> optionalPizzaRef = pizzaRefRepository.findById(id);
+		return optionalPizzaRef.orElseThrow(() -> new PizzaRefNotFoundException(id));
+	}
+
+	public void deletePizzaRef(int id) {
+		Optional<PizzaRef> optionalPizzaRef = pizzaRefRepository.findById(id);
+		PizzaRef pizzaRef = optionalPizzaRef.orElseThrow(() -> new PizzaRefNotFoundException(id));
+		List<Ingredient> ingredients = pizzaRef.getIngredients();
+		for (Ingredient ingredient : ingredients) {
+			ingredient.getPizzaRefList().remove(pizzaRef);
+		}
+		pizzaRefRepository.delete(pizzaRef);
 	}
 }

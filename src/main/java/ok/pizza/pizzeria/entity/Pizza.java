@@ -1,15 +1,19 @@
 package ok.pizza.pizzeria.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Table(name = "pizza")
 @Data
-@ToString(exclude = {"pizzaRef", "order"})
+@ToString(exclude = "order")
 @NoArgsConstructor
+@JsonIgnoreProperties("order")
 public class Pizza {
 
 	@Id
@@ -17,9 +21,11 @@ public class Pizza {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@ManyToOne
-	@JoinColumn(name = "pizza_ref_id", referencedColumnName = "id")
-	private PizzaRef pizzaRef;
+	@Column(name = "pizza_ref-id")
+	private int pizzaRefId;
+
+	@Column(name = "ingredients_names")
+	private List<String> ingredientsNames;
 
 	@Column(name = "is_big")
 	private boolean big;
