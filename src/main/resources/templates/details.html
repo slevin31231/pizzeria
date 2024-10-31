@@ -42,7 +42,14 @@
     </tr>
 </table>
 <p>
-    <a th:href="@{/}">На головну сторінку</a>
+    <form th:action="@{/order}">
+        <button>Внести зміни в замовлення</button>
+    </form>
+</p>
+<p>
+    <form th:action="@{/complete}">
+        <button>OK</button>
+    </form>
 </p>
 </body>
 </html>

@@ -27,25 +27,29 @@
         <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
         <td th:text="${pizza.weight}">Вага</td>
         <td th:text="${pizza.price}">Ціна</td>
+        <td style="border-top: none; border-right: none; border-bottom: none; width: 1%;">
+            <form th:method="POST" th:action="@{/select_pizza_ref}">
+                <input type="hidden" name="pizza_ref_id" th:value="${pizza.pizzaRefId}">
+                <input type="hidden" name="big" th:value="${pizza.big}">
+                <button type="submit">+</button>
+            </form>
+        </td>
+        <td style="border: none; width: 1%;">
+            <form th:method="DELETE" th:action="@{/order/delete_pizza}">
+                <input type="hidden" name="index" th:value="${iterStat.index}">
+                <button type="submit">-</button>
+            </form>
+        </td>
     </tr>
     <tr>
         <td colspan="5">Всього:</td>
         <td th:text="${order.price}">Ціна</td>
     </tr>
 </table>
-<form th:unless="${#lists.isEmpty(order.pizzaList)}" th:method="DELETE" th:action="@{/order/delete_pizza}">
-    <br>
-    <label for="pizza">Видалити піцу із замовлення </label>
-    <select id="pizza" name="index">
-        <option th:each="pizza, iterStat : ${order.pizzaList}"
-                th:value="${iterStat.index}"
-                th:text="${iterStat.index + 1}">Index
-        </option>
-    </select>
-    <input type="submit" value="Видалити піцу"/>
-</form>
 <p>
-    <a th:href="@{/}">Додати ще одну піцу</a>
+    <form th:action="@{/}">
+        <button>Додати ще одну піцу</button>
+    </form>
 </p>
 <form th:method="POST" th:object="${order}">
     <div style="color:red" th:if="${#fields.hasErrors('pizzaList')}" th:errors="*{pizzaList}">Помилка</div>

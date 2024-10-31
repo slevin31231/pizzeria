@@ -7,7 +7,6 @@ import ok.pizza.pizzeria.util.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,10 +20,8 @@ public class OrderService {
 		this.orderRepository = orderRepository;
 	}
 
-	public Order saveOrder(Order order) {
-		order.setDateTime(LocalDateTime.now());
-		order.setDeliveryTime(LocalDateTime.now().plusMinutes(40));
-		return orderRepository.save(order);
+	public void saveOrder(Order order) {
+		orderRepository.save(order);
 	}
 
 	public List<Order> getOrders() {

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,7 +29,9 @@ public class ApplicationController {
 	private final OrderService orderService;
 
 	@Autowired
-	public ApplicationController(IngredientService ingredientService, PizzaRefService pizzaRefService, OrderService orderService) {
+	public ApplicationController(IngredientService ingredientService,
+								 PizzaRefService pizzaRefService,
+								 OrderService orderService) {
 		this.ingredientService = ingredientService;
 		this.pizzaRefService = pizzaRefService;
 		this.orderService = orderService;
@@ -64,32 +67,38 @@ public class ApplicationController {
 	}
 
 	@GetMapping("/order")
-	public String showOrderPage(Order order) {
+	public String showOrderPage(@ModelAttribute Order order) {
 		return "order";
 	}
 
 	@DeleteMapping("/order/delete_pizza")
-	public String deletePizzaFromOrder(@RequestParam int index,
-									   @ModelAttribute Order order) {
+	public String deletePizzaFromOrder(@RequestParam int index, @ModelAttribute Order order) {
 		order.deletePizza(index);
 		return "redirect:/order";
 	}
 
 	@PostMapping("/order")
-	public String addOrder(@Valid @ModelAttribute Order order,
-						   BindingResult bindingResult) {
+	public String addOrder(@Valid @ModelAttribute Order order, BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
 			return "order";
-		orderService.saveOrder(order);
 		return "redirect:/details";
 	}
 
 	@GetMapping("/details")
-	public String showOrderDetailsPage(@ModelAttribute Order order,
-									   SessionStatus sessionStatus) {
-		sessionStatus.setComplete();
+	public String showOrderDetailsPage(@ModelAttribute Order order) {
+		order.setDateTime(LocalDateTime.now());
+		order.setDeliveryTime(LocalDateTime.now().plusMinutes(40));
 		return "details";
 	}
+
+	@GetMapping("/complete")
+	public String complete(@ModelAttribute Order order, SessionStatus sessionStatus) {
+		orderService.saveOrder(order);
+		sessionStatus.setComplete();
+		return "redirect:/";
+	}
+
+//	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	@ModelAttribute
 	public void addIngredientsToModel(Model model) {
