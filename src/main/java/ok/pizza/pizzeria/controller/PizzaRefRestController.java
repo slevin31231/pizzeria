@@ -1,12 +1,16 @@
 package ok.pizza.pizzeria.controller;
 
+import jakarta.validation.Valid;
+import ok.pizza.pizzeria.dto.PizzaRefDto;
+import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.entity.PizzaRef;
+import ok.pizza.pizzeria.service.IngredientService;
 import ok.pizza.pizzeria.service.PizzaRefService;
-import ok.pizza.pizzeria.util.ErrorResponse;
-import ok.pizza.pizzeria.util.PizzaRefNotFoundException;
+import ok.pizza.pizzeria.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -17,10 +21,16 @@ import java.util.List;
 public class PizzaRefRestController {
 
 	private final PizzaRefService pizzaRefService;
+	private final IngredientService ingredientService;
+	private final PizzaRefValidator pizzaRefValidator;
 
 	@Autowired
-	public PizzaRefRestController(PizzaRefService pizzaRefService) {
+	public PizzaRefRestController(PizzaRefService pizzaRefService,
+								  IngredientService ingredientService,
+								  PizzaRefValidator pizzaRefValidator) {
 		this.pizzaRefService = pizzaRefService;
+		this.ingredientService = ingredientService;
+		this.pizzaRefValidator = pizzaRefValidator;
 	}
 
 	@GetMapping
@@ -39,11 +49,71 @@ public class PizzaRefRestController {
 		return ResponseEntity.ok("Pizza with id-%d successfully deleted!".formatted(id));
 	}
 
-	@ExceptionHandler
-	private ResponseEntity<ErrorResponse> handleException(PizzaRefNotFoundException exception) {
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public PizzaRef postPizzaRed(@RequestBody @Valid PizzaRefDto newPizzaRefDto,
+								 BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			ErrorResponse.makeErrorResponse(bindingResult);
+		}
+		PizzaRef newPizzaRef = new PizzaRef();
+		List<Ingredient> ingredients = ingredientService.getIngredientsByNames(newPizzaRefDto.getIngredientsNames());
+
+		newPizzaRef.setIngredients(ingredients);
+		newPizzaRef.setPriceForSmall(newPizzaRefDto.getPriceForSmall());
+		newPizzaRef.setPriceForBig(newPizzaRefDto.getPriceForBig());
+		newPizzaRef.setWeightForSmall(newPizzaRefDto.getWeightForSmall());
+		newPizzaRef.setWeightForBig(newPizzaRefDto.getWeightForBig());
+
+		pizzaRefValidator.validate(newPizzaRef, bindingResult);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse.makeErrorResponse(bindingResult);
+		}
+		ingredients.forEach(ingredient -> ingredient.getPizzaRefList().add(newPizzaRef));
+		return pizzaRefService.savePizzaRef(newPizzaRef);
+	}
+
+	@PutMapping("/{id}")
+	public PizzaRef putPizzaRef(@PathVariable("id") int id,
+								  @RequestBody @Valid PizzaRefDto putPizzaRefDto,
+								  BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			ErrorResponse.makeErrorResponse(bindingResult);
+		}
+		PizzaRef putPizzaRef = pizzaRefService.getPizzaRef(id);
+		List<Ingredient> ingredients = ingredientService.getIngredientsByNames(putPizzaRefDto.getIngredientsNames());
+
+		putPizzaRef.setIngredients(ingredients);
+		putPizzaRef.setPriceForSmall(putPizzaRefDto.getPriceForSmall());
+		putPizzaRef.setPriceForBig(putPizzaRefDto.getPriceForBig());
+		putPizzaRef.setWeightForSmall(putPizzaRefDto.getWeightForSmall());
+		putPizzaRef.setWeightForBig(putPizzaRefDto.getWeightForBig());
+
+		pizzaRefValidator.validate(putPizzaRef, bindingResult);
+		if (bindingResult.hasErrors()) {
+			ErrorResponse.makeErrorResponse(bindingResult);
+		}
+		ingredients.forEach(ingredient -> ingredient.getPizzaRefList().add(putPizzaRef));
+		return pizzaRefService.savePizzaRef(putPizzaRef);
+	}
+
+	@ExceptionHandler({EntityNotFoundException.class, EntityNotSavedException.class, EmptyEntityListException.class})
+	private ResponseEntity<ErrorResponse> handleException(RuntimeException exception) {
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setMessage("Pizza with id-%d wasn't found!".formatted(exception.getId()));
 		errorResponse.setDateTime(LocalDateTime.now());
-		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+		if (exception instanceof EntityNotFoundException entityNotFoundException) {
+			if (entityNotFoundException.getId() != 0) {
+				errorResponse.setMessage("Піцу з id-%d не знайдено!".formatted(entityNotFoundException.getId()));
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+			} else {
+				errorResponse.setMessage("Не всі інгредієнти знайдено! Помилка у назві інгредієнта(ів)!");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+			}
+		} else if (exception instanceof EntityNotSavedException entityNotSavedException) {
+			errorResponse.setMessage(entityNotSavedException.getMessage());
+		} else if (exception instanceof EmptyEntityListException) {
+			errorResponse.setMessage("Не знайдено жодного з вказаних інгредієнтів!");
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 }

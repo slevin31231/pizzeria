@@ -2,8 +2,8 @@ package ok.pizza.pizzeria.service;
 
 import ok.pizza.pizzeria.entity.Order;
 import ok.pizza.pizzeria.repository.OrderRepository;
-import ok.pizza.pizzeria.util.EmptyOrderListException;
-import ok.pizza.pizzeria.util.OrderNotFoundException;
+import ok.pizza.pizzeria.util.EmptyEntityListException;
+import ok.pizza.pizzeria.util.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,21 +30,21 @@ public class OrderService {
 	public List<Order> getOrders() {
 		List<Order> orders = orderRepository.findAll();
 		if (orders.isEmpty()) {
-			throw new EmptyOrderListException();
+			throw new EmptyEntityListException();
 		}
 		return orders;
 	}
 
 	public Order getOrder(int id) {
 		Optional<Order> optionalOrder = orderRepository.findById(id);
-		return optionalOrder.orElseThrow(() -> new OrderNotFoundException(id));
+		return optionalOrder.orElseThrow(() -> new EntityNotFoundException(id));
 	}
 
 	public void deleteOrder(int id) {
 		if (orderRepository.existsById(id)) {
 			orderRepository.deleteById(id);
 		} else {
-			throw new OrderNotFoundException(id);
+			throw new EntityNotFoundException(id);
 		}
 	}
 }

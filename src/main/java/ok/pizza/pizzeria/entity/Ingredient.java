@@ -3,7 +3,6 @@ package ok.pizza.pizzeria.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
@@ -14,21 +13,20 @@ import java.util.List;
 @Data
 @ToString(exclude = "pizzaRefList")
 @RequiredArgsConstructor
-@NoArgsConstructor(force = true)
 @JsonIgnoreProperties("pizzaRefList")
 public class Ingredient {
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private final int id;
+	private int id;
 
 	@Column(name = "ingredient_name")
-	private final String name;
+	private String name;
 
 	@Column(name = "ingredient_type")
 	@Enumerated(EnumType.STRING)
-	private final Type type;
+	private Type type;
 
 	@ManyToMany(mappedBy = "ingredients")
 	private List<PizzaRef> pizzaRefList;

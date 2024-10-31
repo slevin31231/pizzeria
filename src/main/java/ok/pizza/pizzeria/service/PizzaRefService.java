@@ -4,8 +4,7 @@ import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.entity.Pizza;
 import ok.pizza.pizzeria.entity.PizzaRef;
 import ok.pizza.pizzeria.repository.PizzaRefRepository;
-import ok.pizza.pizzeria.util.IngredientNotFoundException;
-import ok.pizza.pizzeria.util.PizzaRefNotFoundException;
+import ok.pizza.pizzeria.util.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,16 +51,20 @@ public class PizzaRefService {
 
 	public PizzaRef getPizzaRef(int id) {
 		Optional<PizzaRef> optionalPizzaRef = pizzaRefRepository.findById(id);
-		return optionalPizzaRef.orElseThrow(() -> new PizzaRefNotFoundException(id));
+		return optionalPizzaRef.orElseThrow(() -> new EntityNotFoundException(id));
 	}
 
 	public void deletePizzaRef(int id) {
 		Optional<PizzaRef> optionalPizzaRef = pizzaRefRepository.findById(id);
-		PizzaRef pizzaRef = optionalPizzaRef.orElseThrow(() -> new PizzaRefNotFoundException(id));
+		PizzaRef pizzaRef = optionalPizzaRef.orElseThrow(() -> new EntityNotFoundException(id));
 		List<Ingredient> ingredients = pizzaRef.getIngredients();
 		for (Ingredient ingredient : ingredients) {
 			ingredient.getPizzaRefList().remove(pizzaRef);
 		}
 		pizzaRefRepository.delete(pizzaRef);
+	}
+
+	public PizzaRef savePizzaRef(PizzaRef pizzaRef) {
+		return pizzaRefRepository.save(pizzaRef);
 	}
 }

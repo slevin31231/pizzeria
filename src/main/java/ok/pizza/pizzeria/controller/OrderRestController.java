@@ -2,9 +2,9 @@ package ok.pizza.pizzeria.controller;
 
 import ok.pizza.pizzeria.entity.Order;
 import ok.pizza.pizzeria.service.OrderService;
-import ok.pizza.pizzeria.util.EmptyOrderListException;
+import ok.pizza.pizzeria.util.EmptyEntityListException;
+import ok.pizza.pizzeria.util.EntityNotFoundException;
 import ok.pizza.pizzeria.util.ErrorResponse;
-import ok.pizza.pizzeria.util.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,15 +40,15 @@ public class OrderRestController {
 		return ResponseEntity.ok("Order with id-%d successfully deleted!".formatted(id));
 	}
 
-	@ExceptionHandler({OrderNotFoundException.class, EmptyOrderListException.class})
+	@ExceptionHandler({EntityNotFoundException.class, EmptyEntityListException.class})
 	private ResponseEntity<ErrorResponse> handleException(RuntimeException exception) {
 		ErrorResponse errorResponse = new ErrorResponse();
-		if (exception instanceof OrderNotFoundException orderNotFoundException) {
-			errorResponse.setMessage("Order with id-%d wasn't found!".formatted(orderNotFoundException.getId()));
-		} else if (exception instanceof EmptyOrderListException) {
-			errorResponse.setMessage("Orders wasn't found!");
+		if (exception instanceof EntityNotFoundException entityNotFoundException) {
+			errorResponse.setMessage("Замовлення з id-%d не знайдено!".formatted(entityNotFoundException.getId()));
+		} else if (exception instanceof EmptyEntityListException) {
+			errorResponse.setMessage("Немає замовлень!");
 		}
 		errorResponse.setDateTime(LocalDateTime.now());
-		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
 	}
 }
