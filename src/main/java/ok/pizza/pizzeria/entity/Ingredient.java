@@ -3,7 +3,7 @@ package ok.pizza.pizzeria.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "ingredient")
 @Data
 @ToString(exclude = "pizzaRefList")
-@RequiredArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties("pizzaRefList")
 public class Ingredient {
 
@@ -32,6 +32,6 @@ public class Ingredient {
 	private List<PizzaRef> pizzaRefList;
 
 	public enum Type {
-		MEAT, VEGETABLE, CHEESE, SEAFOOD;
+		MEAT, VEGETABLE, CHEESE, SEAFOOD
 	}
 }

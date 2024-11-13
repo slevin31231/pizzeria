@@ -1,19 +1,16 @@
 package ok.pizza.pizzeria.util;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import java.time.LocalDateTime;
-
 @Data
 public class ErrorResponse {
 
+	private long timestamp;
+
 	private String message;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-	private LocalDateTime dateTime;
 
 	public static void makeErrorResponse(BindingResult bindingResult) {
 		StringBuilder stringBuilder = new StringBuilder();

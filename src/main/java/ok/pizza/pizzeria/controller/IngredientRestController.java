@@ -1,7 +1,7 @@
 package ok.pizza.pizzeria.controller;
 
 import jakarta.validation.Valid;
-import ok.pizza.pizzeria.dto.IngredientDto;
+import ok.pizza.pizzeria.dto.IngredientDTO;
 import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.service.IngredientService;
 import ok.pizza.pizzeria.util.EntityNotFoundException;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -44,19 +43,19 @@ public class IngredientRestController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteIngredient(@PathVariable("id") int id) {
 		ingredientService.deleteIngredient(id);
-		return ResponseEntity.ok("Ingredient with id-%d successfully deleted!".formatted(id));
+		return ResponseEntity.ok("Інгредієнт з id-%d успішно видалено!".formatted(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Ingredient postIngredient(@RequestBody @Valid IngredientDto newIngredientDto,
+	public Ingredient postIngredient(@RequestBody @Valid IngredientDTO newIngredientDTO,
 									 BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ErrorResponse.makeErrorResponse(bindingResult);
 		}
 		Ingredient newIngredient = new Ingredient();
-		newIngredient.setName(newIngredientDto.getName());
-		newIngredient.setType(Ingredient.Type.valueOf(newIngredientDto.getType()));
+		newIngredient.setName(newIngredientDTO.getName());
+		newIngredient.setType(Ingredient.Type.valueOf(newIngredientDTO.getType()));
 
 		ingredientValidator.validate(newIngredient, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -67,14 +66,14 @@ public class IngredientRestController {
 
 	@PutMapping("/{id}")
 	public Ingredient putIngredient(@PathVariable("id") int id,
-									  @RequestBody @Valid IngredientDto putIngredientDto,
-									  BindingResult bindingResult) {
+									@RequestBody @Valid IngredientDTO putIngredientDTO,
+									BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			ErrorResponse.makeErrorResponse(bindingResult);
 		}
 		Ingredient putIngredient = ingredientService.getIngredient(id);
-		putIngredient.setName(putIngredientDto.getName());
-		putIngredient.setType(Ingredient.Type.valueOf(putIngredientDto.getType()));
+		putIngredient.setName(putIngredientDTO.getName());
+		putIngredient.setType(Ingredient.Type.valueOf(putIngredientDTO.getType()));
 
 		ingredientValidator.validate(putIngredient, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -86,7 +85,7 @@ public class IngredientRestController {
 	@ExceptionHandler({EntityNotFoundException.class, EntityNotSavedException.class})
 	private ResponseEntity<ErrorResponse> handleException(RuntimeException exception) {
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setDateTime(LocalDateTime.now());
+		errorResponse.setTimestamp(System.currentTimeMillis());
 		if (exception instanceof EntityNotFoundException entityNotFoundException) {
 			errorResponse.setMessage("Інгредієнт з id-%d не знайдено!".formatted(entityNotFoundException.getId()));
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

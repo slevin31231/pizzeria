@@ -17,3 +17,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt_secret: Cherkasy_Smilyanska_Street_118

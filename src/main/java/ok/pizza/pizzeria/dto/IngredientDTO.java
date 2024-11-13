@@ -7,7 +7,7 @@ import ok.pizza.pizzeria.entity.Ingredient;
 import ok.pizza.pizzeria.util.ValidEnum;
 
 @Data
-public class IngredientDto {
+public class IngredientDTO {
 
 	@NotBlank(message = "Ім'я має бути заповненим")
 	private String name;

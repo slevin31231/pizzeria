@@ -20,7 +20,7 @@ public class EnumValidator implements ConstraintValidator<ValidEnum, CharSequenc
 
 		this.message = 	!annotation.message().equals("_")
 						? annotation.message()
-						: "Тип має бути: " + String.join(", ", acceptedValues);
+						: "Має бути: " + String.join(", ", acceptedValues);
 	}
 
 	@Override

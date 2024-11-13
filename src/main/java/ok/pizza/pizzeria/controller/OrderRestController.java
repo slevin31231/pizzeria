@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -37,7 +36,7 @@ public class OrderRestController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteOrder(@PathVariable("id") int id) {
 		orderService.deleteOrder(id);
-		return ResponseEntity.ok("Order with id-%d successfully deleted!".formatted(id));
+		return ResponseEntity.ok("Замовлення з id-%d успішно видалено!".formatted(id));
 	}
 
 	@ExceptionHandler({EntityNotFoundException.class, EmptyEntityListException.class})
@@ -48,7 +47,7 @@ public class OrderRestController {
 		} else if (exception instanceof EmptyEntityListException) {
 			errorResponse.setMessage("Немає замовлень!");
 		}
-		errorResponse.setDateTime(LocalDateTime.now());
+		errorResponse.setTimestamp(System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
 	}
 }
