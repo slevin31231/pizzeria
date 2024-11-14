@@ -3,35 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Домашня сторінка</title>
+    <link rel="icon" type="images/x-icon" href="/images/favicon/Pizza.png">
     <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
 </head>
 <body>
 <img th:src="@{/images/OKPizza.png}" alt="OKPizza">
 <h1>Меню</h1>
 <table>
-    <tr>
-        <th rowspan="2">№ піци</th>
-        <th rowspan="2">Склад</th>
-        <th colspan="2">Мала</th>
-        <th colspan="2">Велика</th>
-    </tr>
-    <tr>
-        <th>Ціна, грн</th>
-        <th>Вага, гр</th>
-        <th>Ціна, грн</th>
-        <th>Вага, гр</th>
-    </tr>
-    <tr th:each="pizza_ref : ${pizza_ref_list}">
-        <td th:text="${pizza_ref.id}">№ піци</td>
-        <td>
-            <span th:each="ingredient, iterStat : ${pizza_ref.ingredients}"
-                  th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |">Склад</span>
-        </td>
-        <td th:text="${pizza_ref.priceForSmall}">Ціна, велика</td>
-        <td th:text="${pizza_ref.weightForSmall}">Ціна, мала</td>
-        <td th:text="${pizza_ref.priceForBig}">Вага, велика</td>
-        <td th:text="${pizza_ref.weightForBig}">Вага, мала</td>
-    </tr>
+    <thead>
+        <tr>
+            <th rowspan="2">№ піци</th>
+            <th rowspan="2">Склад</th>
+            <th colspan="2">Мала</th>
+            <th colspan="2">Велика</th>
+        </tr>
+        <tr>
+            <th>Ціна, грн</th>
+            <th>Вага, гр</th>
+            <th>Ціна, грн</th>
+            <th>Вага, гр</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="pizza_ref : ${pizza_ref_list}">
+            <td th:text="${pizza_ref.id}">№ піци</td>
+            <td>
+                <span th:each="ingredient, iterStat : ${pizza_ref.ingredients}"
+                      th:text="${iterStat.last} ? ${ingredient.name} : |${ingredient.name}, |">Склад</span>
+            </td>
+            <td th:text="${pizza_ref.priceForSmall}">Ціна, велика</td>
+            <td th:text="${pizza_ref.weightForSmall}">Ціна, мала</td>
+            <td th:text="${pizza_ref.priceForBig}">Вага, велика</td>
+            <td th:text="${pizza_ref.weightForBig}">Вага, мала</td>
+        </tr>
+    </tbody>
 </table>
 <form th:method="POST" th:action="@{/select_pizza_ref}">
     <div>
@@ -49,7 +54,7 @@
         <br>
     </div>
     <br>
-    <button type="submit">Вибрати</button>
+    <button type="submit" class="default-button">Вибрати</button>
 </form>
 <form th:method="POST" th:object="${pizza_ref}" th:action="@{/create_pizza_ref}">
     <h1>Створити власну піцу</h1>
@@ -93,7 +98,7 @@
         <br>
     </div>
     <br>
-    <button type="submit">Створити</button>
+    <button type="submit" class="default-button">Створити</button>
 </form>
 </body>
 </html>

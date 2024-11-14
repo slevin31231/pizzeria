@@ -1,20 +1,110 @@
 html {
+    background-color: #E8E8E8;
+}
+
+body {
     font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    background-color: #FFFFFF;
+    margin: 0px auto;
+    padding: 20px;
+    width: 900px;
+}
+
+h1 {
+    margin-top: 40px;
+}
+
+h2 {
+    margin-top: 20px;
 }
 
 table {
     border-collapse: collapse;
-    width: 75%;
+    width: 100%;
+}
+
+thead {
+    background-color: #E0E5EB;
 }
 
 th, td {
-    border: 1px solid black;
+    border: 1px solid #CCD3DB;
     padding: 4px;
 }
 
 .checkbox-grid {
     display: grid;
-    grid-template-columns: 300px auto;
+    grid-template-columns: 350px auto;
     gap: 10px;
     justify-content: start;
+}
+
+/* Стили для обычной кнопки */
+button.default-button {
+  background-color: #00BCD4;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  width: 175px;
+  height: 40px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.default-button:hover {
+  background-color: #00A3B2;
+}
+
+button.default-button:active {
+  background-color: #008C99;
+  transform: scale(0.95);
+}
+
+/* Стили для кнопки "+" */
+button.circle-button-plus {
+  background-color: #7CB342;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  width: 30px;
+  height: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.circle-button-plus:hover {
+  background-color: #689F38;
+}
+
+button.circle-button-plus:active {
+  background-color: #558B2F;
+  transform: scale(0.95);
+}
+
+/* Стили для кнопки "-" */
+button.circle-button-minus {
+  background-color: #FF7043;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  width: 30px;
+  height: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.circle-button-minus:hover {
+  background-color: #F4511E;
+}
+
+button.circle-button-minus:active {
+  background-color: #E64A19;
+  transform: scale(0.95);
 }

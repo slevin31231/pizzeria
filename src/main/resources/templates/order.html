@@ -3,52 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Замовлення</title>
+    <link rel="icon" type="images/x-icon" href="/images/favicon/Pizza.png">
     <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
 </head>
 <body>
 <img th:src="@{/images/OKPizza.png}" alt="OKPizza">
 <h1>Замовлення</h1>
 <table>
-    <tr>
-        <th>№</th>
-        <th>№ піци</th>
-        <th>Склад</th>
-        <th>Розмір</th>
-        <th>Вага, гр</th>
-        <th>Ціна, грн</th>
-    </tr>
-    <tr th:each="pizza, iterStat : ${order.pizzaList}">
-        <td th:text="${iterStat.index + 1}">№</td>
-        <td th:text="${pizza.pizzaRefId}">№ піци</td>
-        <td>
-            <span th:each="ingredient, iterStat : ${pizza.ingredientsNames}"
-                  th:text="${iterStat.last} ? ${ingredient} : |${ingredient}, |">Склад</span>
-        </td>
-        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
-        <td th:text="${pizza.weight}">Вага</td>
-        <td th:text="${pizza.price}">Ціна</td>
-        <td style="border-top: none; border-right: none; border-bottom: none; width: 1%;">
-            <form th:method="POST" th:action="@{/select_pizza_ref}">
-                <input type="hidden" name="pizza_ref_id" th:value="${pizza.pizzaRefId}">
-                <input type="hidden" name="big" th:value="${pizza.big}">
-                <button type="submit">+</button>
-            </form>
-        </td>
-        <td style="border: none; width: 1%;">
-            <form th:method="DELETE" th:action="@{/order/delete_pizza}">
-                <input type="hidden" name="index" th:value="${iterStat.index}">
-                <button type="submit">-</button>
-            </form>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="5">Всього:</td>
-        <td th:text="${order.price}">Ціна</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>№ піци</th>
+            <th>Склад</th>
+            <th>Розмір</th>
+            <th>Вага, гр</th>
+            <th>Ціна, грн</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="pizza, iterStat : ${order.pizzaList}">
+            <td th:text="${iterStat.index + 1}">№</td>
+            <td th:text="${pizza.pizzaRefId}">№ піци</td>
+            <td>
+                <span th:each="ingredient, iterStat : ${pizza.ingredientsNames}"
+                      th:text="${iterStat.last} ? ${ingredient} : |${ingredient}, |">Склад</span>
+            </td>
+            <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
+            <td th:text="${pizza.weight}">Вага</td>
+            <td th:text="${pizza.price}">Ціна</td>
+            <td style="border-top: none; border-right: none; border-bottom: none; width: 1%;">
+                <form th:method="POST" th:action="@{/select_pizza_ref}">
+                    <input type="hidden" name="pizza_ref_id" th:value="${pizza.pizzaRefId}">
+                    <input type="hidden" name="big" th:value="${pizza.big}">
+                    <button type="submit" class="circle-button-plus">+</button>
+                </form>
+            </td>
+            <td style="border: none; width: 1%;">
+                <form th:method="DELETE" th:action="@{/order/delete_pizza}">
+                    <input type="hidden" name="index" th:value="${iterStat.index}">
+                    <button type="submit" class="circle-button-minus">-</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5">Всього:</td>
+            <td th:text="${order.price}">Ціна</td>
+        </tr>
+    </tbody>
 </table>
 <p>
     <form th:action="@{/}">
-        <button>Додати ще одну піцу</button>
+        <button class="default-button">Додати ще одну піцу</button>
     </form>
 </p>
 <form th:method="POST" th:object="${order}">
@@ -67,7 +72,7 @@
     <div style="color:red" th:if="${#fields.hasErrors('customerPhoneNumber')}" th:errors="*{customerPhoneNumber}">Помилка</div>
     <br>
     <div>
-        <label for="deliveryAddress">Адрес доставки: </label>
+        <label for="deliveryAddress">Адреса доставки: </label>
         <input id="deliveryAddress" type="text" placeholder="Вулиця, 123" th:field="*{deliveryAddress}">
     </div>
     <div style="color:red" th:if="${#fields.hasErrors('deliveryAddress')}" th:errors="*{deliveryAddress}">Помилка</div>
@@ -90,7 +95,7 @@
     </div>
     <div style="color:red" th:if="${#fields.hasErrors('ccVV')}" th:errors="*{ccVV}">Помилка</div>
     <br>
-    <button type="submit">Замовити</button>
+    <button type="submit" class="default-button">Далі</button>
 </form>
 </body>
 </html>

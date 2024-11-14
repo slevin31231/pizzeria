@@ -3,52 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Деталі замовлення</title>
+    <link rel="icon" type="images/x-icon" href="/images/favicon/Pizza.png">
     <link rel="stylesheet" type="text/css" href="/styles/css/main.css"/>
 </head>
 <body>
 <img th:src="@{/images/OKPizza.png}" alt="OKPizza">
-<h1>Деталі замовлення</h1>
+<h2>Деталі замовлення</h2>
 <div th:object="${order}">
-    <p><b>Дата: </b><span th:text="${#temporals.format(order.dateTime, 'dd-MM-yyyy')}">Дата та час</span></p>
-    <p><b>Час замовлення: </b><span th:text="${#temporals.format(order.dateTime, 'HH:mm:ss')}">Дата та час</span></p>
+    <p><b>Дата: </b><span th:text="${#temporals.format(order.dateTime, 'dd-MM-yyyy')}">Дата</span></p>
+    <p><b>Час замовлення: </b><span th:text="${#temporals.format(order.dateTime, 'HH:mm:ss')}">Час</span></p>
     <p><b>Ім'я замовника: </b><span th:text="*{customerName}">Ім'я</span></p>
     <p><b>Номер телефону: </b><span th:text="*{customerPhoneNumber}">Номер телефону</span></p>
     <p><b>Адреса доставки: </b><span th:text="*{deliveryAddress}">Адреса доставки</span></p>
-    <p><b>Час доставки замовлення: </b><span th:text="${#temporals.format(order.deliveryTime, 'HH:mm:ss')}">Дата та час</span></p>
+    <p><b>Час доставки замовлення: </b><span th:text="${#temporals.format(order.deliveryTime, 'HH:mm:ss')}">Час</span></p>
 </div>
 <table>
-    <tr>
-        <th>№</th>
-        <th>№ піци</th>
-        <th>Склад</th>
-        <th>Розмір</th>
-        <th>Вага, гр</th>
-        <th>Ціна, грн</th>
-    </tr>
-    <tr th:each="pizza, iterStat : ${order.pizzaList}">
-        <td th:text="${iterStat.index + 1}">№</td>
-        <td th:text="${pizza.pizzaRefId}">№ піци</td>
-        <td>
-            <span th:each="ingredient, iterStat : ${pizza.ingredientsNames}"
-                  th:text="${iterStat.last} ? ${ingredient} : |${ingredient}, |">Склад</span>
-        </td>
-        <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
-        <td th:text="${pizza.weight}">Вага</td>
-        <td th:text="${pizza.price}">Ціна</td>
-    </tr>
-    <tr>
-        <td colspan="5">Всього:</td>
-        <td th:text="${order.price}"/>Ціна</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>№ піци</th>
+            <th>Склад</th>
+            <th>Розмір</th>
+            <th>Вага, гр</th>
+            <th>Ціна, грн</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="pizza, iterStat : ${order.pizzaList}">
+            <td th:text="${iterStat.index + 1}">№</td>
+            <td th:text="${pizza.pizzaRefId}">№ піци</td>
+            <td>
+                <span th:each="ingredient, iterStat : ${pizza.ingredientsNames}"
+                      th:text="${iterStat.last} ? ${ingredient} : |${ingredient}, |">Склад</span>
+            </td>
+            <td th:text="${pizza.isBig} ? 'Велика' : 'Мала'">Розмір</td>
+            <td th:text="${pizza.weight}">Вага</td>
+            <td th:text="${pizza.price}">Ціна</td>
+        </tr>
+        <tr>
+            <td colspan="5">Всього:</td>
+            <td th:text="${order.price}">Ціна</td>
+        </tr>
+    </tbody>
 </table>
 <p>
     <form th:action="@{/order}">
-        <button>Внести зміни в замовлення</button>
+        <button class="default-button">Внести зміни</button>
     </form>
 </p>
 <p>
     <form th:action="@{/complete}">
-        <button>Замовити</button>
+        <button class="default-button">Замовити</button>
     </form>
 </p>
 </body>

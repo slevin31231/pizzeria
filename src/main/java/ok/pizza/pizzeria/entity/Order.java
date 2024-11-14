@@ -46,8 +46,8 @@ public class Order {
 	private String customerPhoneNumber;
 
 	@Column(name = "deliveryJ_address", length = 50)
-	@NotBlank(message = "Адрес має бути заповненим")
-	@Size(min = 1, max = 50, message = "Адрес має бути від 1 до 50 символів")
+	@NotBlank(message = "Адреса має бути заповною")
+	@Size(min = 1, max = 50, message = "Адреса має бути від 1 до 50 символів")
 	private String deliveryAddress;
 
 	@Column(name = "cc_number", length = 16)
