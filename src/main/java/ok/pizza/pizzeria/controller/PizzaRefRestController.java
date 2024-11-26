@@ -45,7 +45,7 @@ public class PizzaRefRestController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deletePizzaRef(@PathVariable("id") int id) {
 		pizzaRefService.deletePizzaRef(id);
-		return ResponseEntity.ok("Піцу з id-%d успішно видалено!".formatted(id));
+		return ResponseEntity.ok("Pizza with id-%d successfully deleted!".formatted(id));
 	}
 
 	@PostMapping

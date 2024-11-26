@@ -43,7 +43,7 @@ public class IngredientRestController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteIngredient(@PathVariable("id") int id) {
 		ingredientService.deleteIngredient(id);
-		return ResponseEntity.ok("Інгредієнт з id-%d успішно видалено!".formatted(id));
+		return ResponseEntity.ok("Ingredient with id-%d successfully deleted!".formatted(id));
 	}
 
 	@PostMapping

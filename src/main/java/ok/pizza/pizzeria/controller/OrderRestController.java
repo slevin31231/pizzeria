@@ -36,7 +36,7 @@ public class OrderRestController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteOrder(@PathVariable("id") int id) {
 		orderService.deleteOrder(id);
-		return ResponseEntity.ok("Замовлення з id-%d успішно видалено!".formatted(id));
+		return ResponseEntity.ok("Order with id-%d successfully deleted!".formatted(id));
 	}
 
 	@ExceptionHandler({EntityNotFoundException.class, EmptyEntityListException.class})
